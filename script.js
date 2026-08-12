@@ -288,10 +288,12 @@ function updateThemeColorMeta() {
     };
     const meta = document.getElementById('metaThemeColor');
     if (meta) {
-        meta.content = isDarkMode ? '#2D1F2C' : (themeColors[currentTheme] || '#F8C8DC');
+        // Kasih jeda 0.5 detik biar sinkron sama transisi CSS
+        setTimeout(() => {
+            meta.content = isDarkMode ? '#2D1F2C' : (themeColors[currentTheme] || '#F8C8DC');
+        }, 500);
     }
 }
-
 // ========== TAB ==========
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
