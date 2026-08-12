@@ -236,7 +236,13 @@ function getStoreColor(storeName) {
 }
 
 // ========== DARK MODE ==========
-function toggleDarkMode() { isDarkMode = !isDarkMode; saveDarkMode(); applyDarkMode(); updateDarkModeIcon(); }
+function toggleDarkMode() { 
+    isDarkMode = !isDarkMode; 
+    saveDarkMode(); 
+    applyDarkMode(); 
+    updateDarkModeIcon();
+    updateThemeColorMeta();
+}
 function applyDarkMode() { document.body.classList.toggle('dark-mode', isDarkMode); }
 function updateDarkModeIcon() {
     const icon = document.querySelector('.dark-mode-toggle i');
@@ -252,6 +258,20 @@ function changeTheme(themeName) {
         btn.classList.remove('active');
         if (btn.getAttribute('data-theme') === themeName) btn.classList.add('active');
     });
+    updateThemeColorMeta();
+}
+function updateThemeColorMeta() {
+    const themeColors = {
+        blush: '#F8C8DC',
+        lavender: '#C3AED6',
+        sakura: '#F4A7B9',
+        matcha: '#A8C89A',
+        blue: '#A8C8E8'
+    };
+    const meta = document.getElementById('metaThemeColor');
+    if (meta) {
+        meta.content = isDarkMode ? '#2D1F2C' : (themeColors[currentTheme] || '#F8C8DC');
+    }
 }
 
 // ========== TAB ==========
