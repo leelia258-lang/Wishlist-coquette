@@ -76,7 +76,7 @@
                 
                 <div class="input-group">
                     <label><i class="fa-solid fa-tag"></i> <span data-lang="label_name">Nama Produk</span></label>
-                    <input type="text" id="productName" data-lang-placeholder="placeholder_name">
+                    <input type="text" id="productName" placeholder="Contoh: Dress vintage putih...">
                 </div>
                 
                 <div class="input-group">
@@ -88,12 +88,12 @@
                 
                 <div class="input-group">
                     <label><i class="fa-solid fa-link"></i> <span data-lang="label_link">Link Produk</span></label>
-                    <input type="url" id="productLink" data-lang-placeholder="placeholder_link" oninput="detectStorePreview()">
+                    <input type="url" id="productLink" placeholder="Masukkan link produk..." oninput="detectStorePreview()">
                 </div>
                 
                 <div class="input-group">
                     <label><i class="fa-solid fa-image"></i> <span data-lang="label_image">Gambar Produk (URL)</span></label>
-                    <input type="url" id="productImage" data-lang-placeholder="placeholder_image" oninput="previewImage()">
+                    <input type="url" id="productImage" placeholder="https://..." oninput="previewImage()">
                 </div>
                 
                 <div class="image-preview-container" id="imagePreviewContainer" style="display: none;">
@@ -108,7 +108,7 @@
                 <div class="input-row">
                     <div class="input-group">
                         <label><i class="fa-solid fa-coins"></i> <span data-lang="label_price">Harga (Rp)</span></label>
-                        <input type="text" id="productPrice" data-lang-placeholder="placeholder_price">
+                        <input type="text" id="productPrice" placeholder="150000">
                     </div>
                     <div class="input-group">
                         <label><i class="fa-solid fa-shop"></i> <span data-lang="label_store_detected">Toko Terdeteksi</span></label>
@@ -147,7 +147,7 @@
             <div class="filter-row">
                 <div class="search-wrapper filter-search">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" id="searchInput" class="search-input" data-lang-placeholder="placeholder_search" oninput="filterWishlist()">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." oninput="filterWishlist()">
                     <button class="btn-clear-search" id="btnClearSearch" onclick="clearSearch()" style="display: none;">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
@@ -201,7 +201,7 @@
             <div class="form-card">
                 <h3><i class="fa-solid fa-plus-circle"></i> <span data-lang="cat_form_title">Tambah Kategori Baru</span></h3>
                 <div class="input-group">
-                    <input type="text" id="newCategoryName" data-lang-placeholder="placeholder_cat_name">
+                    <input type="text" id="newCategoryName" placeholder="Nama kategori...">
                 </div>
                 <button class="btn-add" onclick="addCategory()">
                     <i class="fa-solid fa-plus"></i> <span data-lang="btn_add_category">Tambah Kategori</span>
@@ -242,7 +242,7 @@
                 </div>
                 <div class="input-group">
                     <label data-lang="label_link">Link Produk</label>
-                    <input type="url" id="editProductLink" data-lang-placeholder="placeholder_link" oninput="detectEditStorePreview()">
+                    <input type="url" id="editProductLink" placeholder="Masukkan link produk..." oninput="detectEditStorePreview()">
                 </div>
                 <div class="input-group">
                     <label data-lang="label_image">Gambar (URL)</label>
