@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wishlist-coquette-v1';
+const CACHE_NAME = 'wishlist-coquette-v2';
 const FILES_TO_CACHE = [
     './',
     './index.html',
