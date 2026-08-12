@@ -8,13 +8,13 @@
     "description": "My Coquette Wishlist",
     "icons": [
         {
-            "src": "icon_192.png",
+            "src": "icon_192-1.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "icon_512.png",
-            "sizes": "512×x512",
+            "src": "icon_512-1.png",
+            "sizes": "512x512",
             "type": "image/png"
         }
     ]
