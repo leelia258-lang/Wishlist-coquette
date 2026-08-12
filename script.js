@@ -268,16 +268,6 @@ function updateDarkModeIcon() {
 }
 
 // ========== TEMA ==========
-function changeTheme(themeName) {
-    currentTheme = themeName; localStorage.setItem('wishlistTheme', themeName);
-    document.body.classList.remove('theme-lavender', 'theme-sakura', 'theme-matcha', 'theme-blue');
-    if (themeName !== 'blush') document.body.classList.add('theme-' + themeName);
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('data-theme') === themeName) btn.classList.add('active');
-    });
-    updateThemeColorMeta();
-}
 function updateThemeColorMeta() {
     const themeColors = {
         blush: '#F8C8DC',
@@ -288,12 +278,12 @@ function updateThemeColorMeta() {
     };
     const meta = document.getElementById('metaThemeColor');
     if (meta) {
-        // Kasih jeda 0.5 detik biar sinkron sama transisi CSS
         setTimeout(() => {
             meta.content = isDarkMode ? '#2D1F2C' : (themeColors[currentTheme] || '#F8C8DC');
-        }, 500);
+        }, 300);
     }
 }
+
 // ========== TAB ==========
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
