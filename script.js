@@ -178,6 +178,24 @@ function applyLanguage() {
     document.querySelectorAll('.category-select option[value=""]').forEach(opt => {
         opt.textContent = t('option_no_category');
     });
+
+    // Set placeholder untuk input
+const placeholders = {
+    'productName': 'placeholder_name',
+    'productLink': 'placeholder_link',
+    'productImage': 'placeholder_image',
+    'productPrice': 'placeholder_price',
+    'searchInput': 'placeholder_search',
+    'newCategoryName': 'placeholder_cat_name',
+    'editProductLink': 'placeholder_link'
+};
+
+for (const [id, key] of Object.entries(placeholders)) {
+    const el = document.getElementById(id);
+    if (el && translations[currentLang] && translations[currentLang][key]) {
+        el.placeholder = translations[currentLang][key];
+    }
+}
     
     // Update tombol bahasa
     document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -654,4 +672,12 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
 });
 
 applyLanguage();
+
+// Force update service worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(reg => reg.update());
+    });
+}
+
 renderWishlist(); updateBadge(); switchTab('add');
