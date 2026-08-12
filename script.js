@@ -260,6 +260,7 @@ function toggleDarkMode() {
     applyDarkMode(); 
     updateDarkModeIcon();
     updateThemeColorMeta();
+    renderWishlist();
 }
 function applyDarkMode() { document.body.classList.toggle('dark-mode', isDarkMode); }
 function updateDarkModeIcon() {
@@ -268,6 +269,17 @@ function updateDarkModeIcon() {
 }
 
 // ========== TEMA ==========
+function changeTheme(themeName) {
+    currentTheme = themeName; localStorage.setItem('wishlistTheme', themeName);
+    document.body.classList.remove('theme-lavender', 'theme-sakura', 'theme-matcha', 'theme-blue');
+    if (themeName !== 'blush') document.body.classList.add('theme-' + themeName);
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-theme') === themeName) btn.classList.add('active');
+    });
+    updateThemeColorMeta();
+    renderWishlist();
+}
 function updateThemeColorMeta() {
     const themeColors = {
         blush: '#F8C8DC',
