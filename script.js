@@ -278,9 +278,7 @@ function updateThemeColorMeta() {
     };
     const meta = document.getElementById('metaThemeColor');
     if (meta) {
-        setTimeout(() => {
-            meta.content = isDarkMode ? '#2D1F2C' : (themeColors[currentTheme] || '#F8C8DC');
-        }, 100);
+        meta.content = isDarkMode ? '#2D1F2C' : (themeColors[currentTheme] || '#F8C8DC');
     }
 }
 
