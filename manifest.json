@@ -3,8 +3,6 @@
     "short_name": "Coquette Wishlist Store",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#FDE2E7",
-    "theme_color": "#F8C8DC",
     "description": "My Coquette Wishlist",
     "icons": [
         {
