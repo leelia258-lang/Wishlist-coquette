@@ -661,6 +661,13 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
     if (btn.getAttribute('data-theme') === currentTheme) btn.classList.add('active');
 });
 
+// Hapus semua service worker lama
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(reg => reg.unregister());
+    });
+}
+
 applyLanguage();
 
 // Force update service worker
