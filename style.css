@@ -103,7 +103,7 @@ body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary) 30%, var(--bg-tertiary) 60%, var(--body-bg-end));
     background-attachment: fixed; min-height: 100vh; color: var(--text-primary);
-    position: relative; overflow-x: hidden; transition: background 0.3s, color 0.3s;
+    position: relative; overflow-x: hidden; transition: color 0.3s;
 }
 
 body::before {
