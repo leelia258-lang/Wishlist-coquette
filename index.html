@@ -8,6 +8,25 @@
     <meta name="theme-color" content="#F8C8DC" id="metaThemeColor">
     <meta name="background-color" content="#FDE2E7" id="metaBgColor">
     
+    <script>
+    // Override splash screen color sesuai tema yang tersimpan
+    (function() {
+        var themes = {
+            blush: { bg: '#FDE2E7', theme: '#F8C8DC' },
+            lavender: { bg: '#E8DFF5', theme: '#C3AED6' },
+            sakura: { bg: '#FDE2E7', theme: '#F4A7B9' },
+            matcha: { bg: '#E8F0E3', theme: '#A8C89A' },
+            blue: { bg: '#E0ECF5', theme: '#A8C8E8' }
+        };
+        var darkMode = localStorage.getItem('wishlistDarkMode') === 'true';
+        var currentTheme = localStorage.getItem('wishlistTheme') || 'blush';
+        var colors = darkMode ? { bg: '#2D1F2C', theme: '#4A2F45' } : (themes[currentTheme] || themes.blush);
+        
+        document.getElementById('metaThemeColor').content = colors.theme;
+        document.getElementById('metaBgColor').content = colors.bg;
+    })();
+    </script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
