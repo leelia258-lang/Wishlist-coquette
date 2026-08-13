@@ -1,0 +1,551 @@
+// ========== DATA ==========
+let wishlist = JSON.parse(localStorage.getItem('wishlistCoquette')) || [];
+let categories = JSON.parse(localStorage.getItem('wishlistCategories')) || [];
+let currentEditIndex = -1;
+let currentEditCategoryId = null;
+let currentTheme = localStorage.getItem('wishlistTheme') || 'blush';
+let isDarkMode = localStorage.getItem('wishlistDarkMode') === 'true';
+let currentLang = localStorage.getItem('wishlistLang') || 'id';
+
+function saveWishlist() { localStorage.setItem('wishlistCoquette', JSON.stringify(wishlist)); }
+function saveCategories() { localStorage.setItem('wishlistCategories', JSON.stringify(categories)); }
+function saveDarkMode() { localStorage.setItem('wishlistDarkMode', isDarkMode); }
+function saveLang() { localStorage.setItem('wishlistLang', currentLang); }
+
+// ========== TRANSLATIONS ==========
+const translations = {
+    id: {
+        subtitle: 'Barang yang ingin aku beli 🛍️',
+        theme_label: 'Pilih Tema',
+        tab_add: 'Tambah', tab_wishlist: 'Wishlist', tab_categories: 'Kategori',
+        form_title_add: 'Tambah Wishlist Baru',
+        label_name: 'Nama Produk', label_category: 'Kategori', label_link: 'Link Produk',
+        label_image: 'Gambar Produk (URL)', label_price: 'Harga (Rp)', label_store_detected: 'Toko Terdeteksi',
+        option_no_category: 'Tanpa Kategori',
+        btn_add: 'Tambah ke Wishlist', btn_cancel: 'Batal', btn_save: 'Simpan',
+        btn_show_all: 'Tampilkan Semua', btn_add_first: 'Tambah Sekarang', btn_add_category: 'Tambah Kategori',
+        wishlist_count_1: 'Kamu punya', wishlist_count_2: 'item di wishlist',
+        total_label: 'Total Wishlist',
+        filter_all_categories: 'Semua Kategori', filter_all_stores: 'Semua Toko',
+        sort_label: 'Urutkan:', sort_newest: 'Terbaru', sort_oldest: 'Terlama',
+        sort_expensive: 'Termahal', sort_cheapest: 'Termurah', sort_az: 'Nama A-Z', sort_za: 'Nama Z-A',
+        no_result_title: 'Produk tidak ditemukan', no_result_text: 'Coba kata kunci lain!',
+        empty_title: 'Wishlist kamu masih kosong', empty_text: 'Yuk, tambahkan produk impianmu dulu!',
+        cat_form_title: 'Tambah Kategori Baru', cat_list_title: 'Daftar Kategori',
+        cat_empty_title: 'Belum ada kategori', cat_empty_text: 'Buat kategori pertamamu di atas!',
+        cat_name_label: 'Nama Kategori',
+        modal_edit_title: 'Edit Wishlist', modal_edit_cat_title: 'Edit Kategori',
+        toast_added: 'Berhasil ditambahkan! 🎀', toast_updated: 'Wishlist diperbarui! ✨',
+        toast_deleted: 'Item dihapus 💔', toast_cat_added: 'Kategori ditambahkan! 🏷️',
+        toast_cat_updated: 'Kategori diperbarui! ✨', toast_cat_deleted: 'Kategori dihapus! 🗑️',
+        toast_purchased: 'Yay, wishlist tercapai! 🎉',
+        confirm_delete_item: 'Yakin ingin menghapus',
+        confirm_delete_cat: 'Produk akan jadi "Tanpa Kategori". Lanjutkan?',
+        label_purchased: 'Dibeli', label_not_purchased: 'Belum dibeli',
+        label_no_link: 'Tanpa link', label_open_link: 'Buka Link', label_no_name: 'Tanpa Nama',
+        search_result: 'Menampilkan ${visible} dari ${total} produk',
+        store_total_format: '${name}: Rp ${total}'
+    },
+    en: {
+        subtitle: 'Things I want to buy 🛍️',
+        theme_label: 'Choose Theme',
+        tab_add: 'Add', tab_wishlist: 'Wishlist', tab_categories: 'Categories',
+        form_title_add: 'Add New Wishlist',
+        label_name: 'Product Name', label_category: 'Category', label_link: 'Product Link',
+        label_image: 'Product Image (URL)', label_price: 'Price (Rp)', label_store_detected: 'Store Detected',
+        option_no_category: 'No Category',
+        btn_add: 'Add to Wishlist', btn_cancel: 'Cancel', btn_save: 'Save',
+        btn_show_all: 'Show All', btn_add_first: 'Add Now', btn_add_category: 'Add Category',
+        wishlist_count_1: 'You have', wishlist_count_2: 'items in wishlist',
+        total_label: 'Total Wishlist',
+        filter_all_categories: 'All Categories', filter_all_stores: 'All Stores',
+        sort_label: 'Sort:', sort_newest: 'Newest', sort_oldest: 'Oldest',
+        sort_expensive: 'Most Expensive', sort_cheapest: 'Cheapest', sort_az: 'Name A-Z', sort_za: 'Name Z-A',
+        no_result_title: 'Product not found', no_result_text: 'Try another keyword!',
+        empty_title: 'Your wishlist is empty', empty_text: 'Add your dream products first!',
+        cat_form_title: 'Add New Category', cat_list_title: 'Category List',
+        cat_empty_title: 'No categories yet', cat_empty_text: 'Create your first category above!',
+        cat_name_label: 'Category Name',
+        modal_edit_title: 'Edit Wishlist', modal_edit_cat_title: 'Edit Category',
+        toast_added: 'Successfully added! 🎀', toast_updated: 'Wishlist updated! ✨',
+        toast_deleted: 'Item deleted 💔', toast_cat_added: 'Category added! 🏷️',
+        toast_cat_updated: 'Category updated! ✨', toast_cat_deleted: 'Category deleted! 🗑️',
+        toast_purchased: 'Yay, wishlist achieved! 🎉',
+        confirm_delete_item: 'Are you sure you want to delete',
+        confirm_delete_cat: 'Items will become "No Category". Continue?',
+        label_purchased: 'Purchased', label_not_purchased: 'Not purchased',
+        label_no_link: 'No link', label_open_link: 'Open Link', label_no_name: 'No Name',
+        search_result: 'Showing ${visible} of ${total} products',
+        store_total_format: '${name}: Rp ${total}'
+    }
+};
+
+function t(key, vars = {}) {
+    let text = (translations[currentLang] && translations[currentLang][key]) || translations['id'][key] || key;
+    for (const [k, v] of Object.entries(vars)) text = text.replace('${' + k + '}', v);
+    return text;
+}
+
+function applyLanguage() {
+    document.querySelectorAll('[data-lang]').forEach(el => {
+        const key = el.getAttribute('data-lang');
+        if (translations[currentLang] && translations[currentLang][key]) el.textContent = translations[currentLang][key];
+    });
+    document.querySelectorAll('.category-select option[value=""]').forEach(opt => opt.textContent = t('option_no_category'));
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-lang') === currentLang) btn.classList.add('active');
+    });
+    if (document.getElementById('tabList').classList.contains('active')) { populateCategoryFilter(); populateStoreFilter(); renderWishlist(); }
+    if (document.getElementById('tabCategories').classList.contains('active')) renderCategoryList();
+    populateCategoryDropdowns();
+}
+
+function changeLanguage(lang) { currentLang = lang; saveLang(); applyLanguage(); }
+
+// ========== STORE DETECTION ==========
+const STORE_COLORS = ['#EE4D2D','#42B549','#0F1464','#000000','#232F3E','#FF6A00','#E91E63','#9C27B0','#3F51B5','#009688','#FF5722','#795548'];
+
+function extractStoreFromUrl(url) {
+    if (!url) return null;
+    try {
+        let hostname = url.replace(/^https?:\/\//, '').split('/')[0].toLowerCase().replace(/^www\./, '');
+        if (hostname.includes('shopee')) return { name: 'Shopee', domain: 'shopee' };
+        if (hostname.includes('tokopedia')) return { name: 'Tokopedia', domain: 'tokopedia' };
+        if (hostname.includes('lazada')) return { name: 'Lazada', domain: 'lazada' };
+        if (hostname.includes('tiktok')) return { name: 'TikTok Shop', domain: 'tiktok' };
+        if (hostname.includes('amazon')) return { name: 'Amazon', domain: 'amazon' };
+        if (hostname.includes('alibaba') || hostname.includes('aliexpress')) return { name: 'Alibaba', domain: 'alibaba' };
+        const parts = hostname.split('.');
+        const TLDs = ['com','co','id','net','org','io','sg','my','vn','th','ph'];
+        let storeName = parts.find(p => !TLDs.includes(p)) || parts[0];
+        return { name: storeName.charAt(0).toUpperCase() + storeName.slice(1), domain: storeName.toLowerCase() };
+    } catch (e) { return null; }
+}
+
+function getStoreColor(name) {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    return STORE_COLORS[Math.abs(hash) % STORE_COLORS.length];
+}
+
+// ========== DARK MODE ==========
+function toggleDarkMode() { isDarkMode = !isDarkMode; saveDarkMode(); applyDarkMode(); updateDarkModeIcon(); updateThemeColorMeta(); renderWishlist(); }
+function applyDarkMode() { document.body.classList.toggle('dark-mode', isDarkMode); }
+function updateDarkModeIcon() {
+    const icon = document.querySelector('.dark-mode-toggle i');
+    if (icon) icon.className = isDarkMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+}
+
+// ========== TEMA ==========
+function changeTheme(themeName) {
+    currentTheme = themeName; localStorage.setItem('wishlistTheme', themeName);
+    document.body.classList.remove('theme-lavender','theme-sakura','theme-matcha','theme-blue');
+    if (themeName !== 'blush') document.body.classList.add('theme-' + themeName);
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-theme') === themeName) btn.classList.add('active');
+    });
+    updateThemeColorMeta(); renderWishlist();
+}
+
+function updateThemeColorMeta() {
+    const colors = { 
+        blush: { bg: '#FDE2E7', theme: '#F8C8DC' },
+        lavender: { bg: '#E8DFF5', theme: '#C3AED6' },
+        sakura: { bg: '#FDE2E7', theme: '#F4A7B9' },
+        matcha: { bg: '#E8F0E3', theme: '#A8C89A' },
+        blue: { bg: '#E0ECF5', theme: '#A8C8E8' }
+    };
+    
+    const metaTheme = document.getElementById('metaThemeColor');
+    const metaBg = document.getElementById('metaBgColor');
+    
+    const colorSet = isDarkMode 
+        ? { bg: '#2D1F2C', theme: '#4A2F45' } 
+        : (colors[currentTheme] || colors.blush);
+    
+    if (metaTheme) metaTheme.content = colorSet.theme;
+    if (metaBg) metaBg.content = colorSet.bg;
+    
+    // Update manifest theme_color secara dinamis
+    updateManifestColors(colorSet);
+}
+
+function updateManifestColors(colorSet) {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) metaTheme.content = colorSet.theme;
+    }
+}
+
+// ========== TAB ==========
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (tabName === 'add') { document.getElementById('tabAdd').classList.add('active'); document.getElementById('tabAddBtn').classList.add('active'); populateCategoryDropdowns(); }
+    else if (tabName === 'list') { document.getElementById('tabList').classList.add('active'); document.getElementById('tabListBtn').classList.add('active'); populateCategoryFilter(); populateStoreFilter(); clearSearch(); renderWishlist(); }
+    else if (tabName === 'categories') { document.getElementById('tabCategories').classList.add('active'); document.getElementById('tabCategoriesBtn').classList.add('active'); renderCategoryList(); }
+    updateBadge();
+}
+
+function updateBadge() { document.getElementById('badgeCount').textContent = wishlist.length; document.getElementById('totalItems').textContent = wishlist.length; }
+
+// ========== TOTAL ==========
+function updateTotalPrice() {
+    const card = document.getElementById('totalPriceCard');
+    if (wishlist.length === 0) { card.style.display = 'none'; return; }
+    card.style.display = 'flex';
+    let total = 0;
+    wishlist.forEach(item => { const p = parseInt(String(item.price).replace(/[^0-9]/g,'')); if (!isNaN(p)) total += p; });
+    document.getElementById('totalPriceAmount').textContent = 'Rp ' + total.toLocaleString('id-ID');
+}
+
+function updateStoreTotals() {
+    const container = document.getElementById('storeTotals');
+    if (wishlist.length === 0) { container.style.display = 'none'; return; }
+    const totals = {};
+    wishlist.forEach(item => {
+        const name = item.storeName || 'Tanpa Toko';
+        if (!totals[name]) totals[name] = { total: 0, color: item.storeColor || '#888' };
+        const p = parseInt(String(item.price).replace(/[^0-9]/g,''));
+        if (!isNaN(p)) totals[name].total += p;
+    });
+    container.innerHTML = ''; container.style.display = 'flex';
+    for (const [name, data] of Object.entries(totals)) {
+        const el = document.createElement('span'); el.className = 'store-total-item'; el.style.background = data.color;
+        el.innerHTML = `<i class="fa-solid fa-store"></i> ${t('store_total_format',{name,total:data.total.toLocaleString('id-ID')})}`;
+        container.appendChild(el);
+    }
+}
+
+// ========== SORTING ==========
+function getSortedWishlist() {
+    const sortBy = document.getElementById('sortBy').value;
+    const sorted = [...wishlist];
+    switch(sortBy) {
+        case 'newest': return sorted.reverse();
+        case 'oldest': return sorted;
+        case 'expensive': return sorted.sort((a,b) => (parseInt(String(b.price).replace(/[^0-9]/g,''))||0) - (parseInt(String(a.price).replace(/[^0-9]/g,''))||0));
+        case 'cheapest': return sorted.sort((a,b) => (parseInt(String(a.price).replace(/[^0-9]/g,''))||0) - (parseInt(String(b.price).replace(/[^0-9]/g,''))||0));
+        case 'az': return sorted.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+        case 'za': return sorted.sort((a,b) => (b.name||'').localeCompare(a.name||''));
+        default: return sorted;
+    }
+}
+function sortAndRender() { renderWishlist(); }
+
+// ========== POPULATE ==========
+function populateCategoryDropdowns() {
+    ['productCategory','editProductCategory'].forEach(id => {
+        const sel = document.getElementById(id); if (!sel) return;
+        sel.innerHTML = `<option value="">${t('option_no_category')}</option>`;
+        categories.forEach(cat => sel.innerHTML += `<option value="${cat.id}">${cat.name}</option>`);
+    });
+}
+function populateCategoryFilter() {
+    const sel = document.getElementById('categoryFilter'); if (!sel) return;
+    sel.innerHTML = `<option value="all">${t('filter_all_categories')}</option>`;
+    categories.forEach(cat => sel.innerHTML += `<option value="${cat.id}">${cat.name}</option>`);
+}
+function populateStoreFilter() {
+    const sel = document.getElementById('storeFilter'); if (!sel) return;
+    const names = new Set(); wishlist.forEach(item => { if (item.storeName) names.add(item.storeName); });
+    sel.innerHTML = `<option value="all">${t('filter_all_stores')}</option>`;
+    names.forEach(name => sel.innerHTML += `<option value="${name}">${name}</option>`);
+}
+
+// ========== KATEGORI CRUD ==========
+function addCategory() {
+    const name = document.getElementById('newCategoryName').value.trim();
+    if (!name) { shakeElement(document.getElementById('newCategoryName')); return; }
+    categories.push({ id: 'cat_'+Date.now(), name }); saveCategories();
+    document.getElementById('newCategoryName').value = ''; renderCategoryList(); showToast(t('toast_cat_added'));
+}
+function openEditCategoryModal(catId) {
+    currentEditCategoryId = catId;
+    document.getElementById('editCategoryName').value = categories.find(c => c.id === catId)?.name || '';
+    document.getElementById('editCategoryModal').classList.add('show');
+    document.getElementById('modalBackdrop').classList.add('show'); document.body.classList.add('modal-open');
+}
+function closeEditCategoryModal() {
+    document.getElementById('editCategoryModal').classList.remove('show');
+    document.getElementById('modalBackdrop').classList.remove('show'); document.body.classList.remove('modal-open');
+    currentEditCategoryId = null;
+}
+function saveEditCategory() {
+    if (!currentEditCategoryId) return;
+    const name = document.getElementById('editCategoryName').value.trim(); if (!name) return;
+    const cat = categories.find(c => c.id === currentEditCategoryId); if (cat) cat.name = name;
+    saveCategories(); closeEditCategoryModal(); renderCategoryList();
+    populateCategoryDropdowns(); populateCategoryFilter(); renderWishlist(); showToast(t('toast_cat_updated'));
+}
+function deleteCategory(catId) {
+    if (!confirm(t('confirm_delete_cat'))) return;
+    wishlist.forEach(item => { if (item.category === catId) item.category = ''; });
+    saveWishlist(); categories = categories.filter(c => c.id !== catId); saveCategories();
+    renderCategoryList(); populateCategoryDropdowns(); populateCategoryFilter(); renderWishlist();
+    showToast(t('toast_cat_deleted'));
+}
+function renderCategoryList() {
+    const container = document.getElementById('categoryList');
+    const empty = document.getElementById('emptyCategoryState');
+    container.innerHTML = '';
+    if (categories.length === 0) { empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    categories.forEach(cat => {
+        const count = wishlist.filter(item => item.category === cat.id).length;
+        const el = document.createElement('div'); el.className = 'category-item';
+        el.innerHTML = `<div class="category-item-info"><span class="category-item-name">${cat.name}</span><span class="category-item-count">(${count})</span></div>
+            <div class="category-item-actions">
+                <button class="btn-edit-cat" onclick="openEditCategoryModal('${cat.id}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button class="btn-delete-cat" onclick="deleteCategory('${cat.id}')"><i class="fa-solid fa-trash-can"></i></button>
+            </div>`;
+        container.appendChild(el);
+    });
+}
+
+// ========== WISHLIST RENDER ==========
+function getCategoryById(id) { return categories.find(c => c.id === id) || null; }
+
+function renderWishlist() {
+    const container = document.getElementById('wishlistContainer');
+    const emptyState = document.getElementById('emptyState');
+    container.innerHTML = '';
+    if (wishlist.length === 0) {
+        document.querySelector('.wishlist-header').style.display = 'none';
+        emptyState.classList.remove('hidden'); updateTotalPrice(); updateStoreTotals(); populateStoreFilter(); return;
+    }
+    document.querySelector('.wishlist-header').style.display = 'block';
+    emptyState.classList.add('hidden');
+    getSortedWishlist().forEach((item, index) => {
+        const cat = getCategoryById(item.category);
+        const isPurchased = item.purchased || false;
+        const storeName = item.storeName || '';
+        const storeColor = item.storeColor || '#888';
+        const realIndex = wishlist.indexOf(item);
+        const el = document.createElement('div');
+        el.className = 'wishlist-item' + (isPurchased ? ' purchased' : '');
+        el.style.animationDelay = `${index * 0.03}s`;
+        el.innerHTML = `
+            ${cat ? `<div class="item-category-badge">${cat.name}</div>` : ''}
+            ${item.image ? `<div class="item-image-wrapper"><img src="${escapeHTML(item.image)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'item-no-image\\'><i class=\\'fa-solid fa-image\\'></i></div>'"></div>` : `<div class="item-no-image"><i class="fa-solid fa-image"></i></div>`}
+            <div class="item-actions-top">
+                <button class="btn-edit" onclick="openEditModal(${realIndex})"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button class="btn-delete" onclick="deleteItem(${realIndex})"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+            <div class="item-info">
+                <div class="item-name">${escapeHTML(item.name) || t('label_no_name')}</div>
+                ${storeName ? `<div class="item-store-inline"><span class="store-badge" style="background:${storeColor};"><i class="fa-solid fa-store"></i> ${storeName}</span></div>` : ''}
+                <div class="item-price">${formatRupiah(item.price) || '0'}</div>
+                ${item.link ? `<a href="${escapeHTML(item.link)}" target="_blank" class="item-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> ${t('label_open_link')}</a>` : `<span class="item-link" style="opacity:0.5;"><i class="fa-solid fa-link-slash"></i> ${t('label_no_link')}</span>`}
+            </div>
+            <div class="item-purchased-checkbox ${isPurchased ? 'checked' : ''}" onclick="togglePurchased(${realIndex})">
+                <i class="fa-solid ${isPurchased ? 'fa-circle-check' : 'fa-circle'}"></i> ${isPurchased ? t('label_purchased') : t('label_not_purchased')}
+            </div>`;
+        container.appendChild(el);
+    });
+    filterWishlist(); updateTotalPrice(); updateStoreTotals(); populateStoreFilter();
+}
+
+function togglePurchased(index) {
+    wishlist[index].purchased = !wishlist[index].purchased; saveWishlist(); renderWishlist();
+    if (wishlist[index].purchased) showToast(t('toast_purchased'));
+}
+
+// ========== FILTER ==========
+function filterWishlist() {
+    const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+    const categoryFilter = document.getElementById('categoryFilter').value;
+    const storeFilter = document.getElementById('storeFilter').value;
+    document.getElementById('btnClearSearch').style.display = searchTerm ? 'flex' : 'none';
+    if (wishlist.length === 0) return;
+    let visibleCount = 0;
+    const sorted = getSortedWishlist();
+    document.querySelectorAll('.wishlist-item').forEach((item, idx) => {
+        const name = item.querySelector('.item-name')?.textContent.toLowerCase() || '';
+        const price = item.querySelector('.item-price')?.textContent.toLowerCase() || '';
+        let show = true;
+        if (searchTerm && !name.includes(searchTerm) && !price.includes(searchTerm)) show = false;
+        if (categoryFilter !== 'all' && sorted[idx] && sorted[idx].category !== categoryFilter) show = false;
+        if (storeFilter !== 'all' && sorted[idx] && (sorted[idx].storeName || '') !== storeFilter) show = false;
+        item.classList.toggle('hidden-item', !show);
+        if (show) visibleCount++;
+    });
+    const resultText = document.getElementById('searchResultText');
+    const noResult = document.getElementById('noResultState');
+    if (searchTerm || categoryFilter !== 'all' || storeFilter !== 'all') {
+        if (visibleCount === 0) { resultText.style.display = 'none'; noResult.style.display = 'block'; }
+        else { resultText.textContent = t('search_result',{visible:visibleCount,total:wishlist.length}); resultText.style.display = 'block'; noResult.style.display = 'none'; }
+    } else { resultText.style.display = 'none'; noResult.style.display = 'none'; }
+}
+function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('btnClearSearch').style.display = 'none';
+    document.getElementById('searchResultText').style.display = 'none';
+    document.getElementById('noResultState').style.display = 'none';
+    document.querySelectorAll('.wishlist-item').forEach(item => item.classList.remove('hidden-item'));
+}
+
+// ========== WISHLIST CRUD ==========
+function addItem() {
+    const name = document.getElementById('productName').value.trim();
+    if (!name) { shakeElement(document.getElementById('productName')); return; }
+    let link = document.getElementById('productLink').value.trim();
+    if (link && !link.startsWith('http')) link = 'https://' + link;
+    const store = extractStoreFromUrl(link);
+    wishlist.unshift({
+        name, category: document.getElementById('productCategory').value,
+        price: document.getElementById('productPrice').value.trim() || '0',
+        link, image: document.getElementById('productImage').value.trim(),
+        storeName: store ? store.name : '', storeColor: store ? getStoreColor(store.name) : '#888', purchased: false
+    });
+    saveWishlist();
+    ['productName','productPrice','productLink','productImage'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('storeBadgePreview').style.display = 'none';
+    document.getElementById('storeNamePreview').textContent = '-';
+    clearImagePreview(); updateBadge(); showToast(t('toast_added'));
+    setTimeout(() => switchTab('list'), 400);
+}
+function openEditModal(index) {
+    currentEditIndex = index; const item = wishlist[index];
+    populateCategoryDropdowns();
+    document.getElementById('editProductName').value = item.name;
+    document.getElementById('editProductCategory').value = item.category || '';
+    document.getElementById('editProductPrice').value = item.price;
+    document.getElementById('editProductLink').value = item.link || '';
+    document.getElementById('editProductImage').value = item.image || '';
+    if (item.image) { document.getElementById('editImagePreview').src = item.image; document.getElementById('editImagePreviewContainer').style.display = 'block'; }
+    detectEditStorePreview();
+    document.getElementById('editModal').classList.add('show');
+    document.getElementById('modalBackdrop').classList.add('show'); document.body.classList.add('modal-open');
+}
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('show');
+    document.getElementById('modalBackdrop').classList.remove('show'); document.body.classList.remove('modal-open');
+    currentEditIndex = -1;
+}
+function saveEditItem() {
+    if (currentEditIndex === -1) return;
+    const name = document.getElementById('editProductName').value.trim(); if (!name) return;
+    let link = document.getElementById('editProductLink').value.trim();
+    if (link && !link.startsWith('http')) link = 'https://' + link;
+    const store = extractStoreFromUrl(link);
+    wishlist[currentEditIndex] = {
+        name, category: document.getElementById('editProductCategory').value,
+        price: document.getElementById('editProductPrice').value.trim() || '0',
+        link, image: document.getElementById('editProductImage').value.trim(),
+        storeName: store ? store.name : '', storeColor: store ? getStoreColor(store.name) : '#888',
+        purchased: wishlist[currentEditIndex].purchased || false
+    };
+    saveWishlist(); closeEditModal(); renderWishlist(); updateBadge(); showToast(t('toast_updated'));
+}
+function deleteItem(index) {
+    if (confirm(`${t('confirm_delete_item')} "${wishlist[index].name}"? 🥺`)) {
+        wishlist.splice(index, 1); saveWishlist(); renderWishlist(); updateBadge(); showToast(t('toast_deleted'));
+    }
+}
+
+// ========== HELPERS ==========
+function escapeHTML(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+function formatRupiah(angka) { let n = String(angka).replace(/[^0-9]/g,''); return n ? n.replace(/\B(?=(\d{3})+(?!\d))/g,'.') : '0'; }
+function shakeElement(el) { el.style.borderColor = '#FF6B8A'; el.style.animation = 'shake 0.5s ease'; setTimeout(() => { el.style.borderColor = ''; el.style.animation = ''; }, 500); }
+function showToast(msg) {
+    const old = document.querySelector('.toast'); if (old) old.remove();
+    const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(92,61,75,0.9);color:white;padding:12px 25px;border-radius:25px;font-size:0.9em;z-index:101;animation:toastIn 0.4s,toastOut 0.4s 1.8s forwards;';
+    document.body.appendChild(t); setTimeout(() => t.remove(), 2500);
+}
+function previewImage() { const url = document.getElementById('productImage').value.trim(); if (url) { document.getElementById('imagePreview').src = url; document.getElementById('imagePreviewContainer').style.display = 'block'; } else document.getElementById('imagePreviewContainer').style.display = 'none'; }
+function clearImagePreview() { document.getElementById('productImage').value = ''; document.getElementById('imagePreviewContainer').style.display = 'none'; }
+function previewEditImage() { const url = document.getElementById('editProductImage').value.trim(); if (url) { document.getElementById('editImagePreview').src = url; document.getElementById('editImagePreviewContainer').style.display = 'block'; } else document.getElementById('editImagePreviewContainer').style.display = 'none'; }
+function clearEditImagePreview() { document.getElementById('editProductImage').value = ''; document.getElementById('editImagePreviewContainer').style.display = 'none'; }
+function detectStorePreview() {
+    const store = extractStoreFromUrl(document.getElementById('productLink').value.trim());
+    const badge = document.getElementById('storeBadgePreview');
+    const name = document.getElementById('storeNamePreview');
+    if (store) { badge.style.display = 'inline-flex'; badge.style.background = getStoreColor(store.name); badge.innerHTML = `<i class="fa-solid fa-store"></i> ${store.name}`; name.textContent = ''; }
+    else { badge.style.display = 'none'; name.textContent = '-'; }
+}
+function detectEditStorePreview() {
+    const store = extractStoreFromUrl(document.getElementById('editProductLink').value.trim());
+    const badge = document.getElementById('editStoreBadgePreview');
+    const name = document.getElementById('editStoreNamePreview');
+    if (store) { badge.style.display = 'inline-flex'; badge.style.background = getStoreColor(store.name); badge.innerHTML = `<i class="fa-solid fa-store"></i> ${store.name}`; name.textContent = ''; }
+    else { badge.style.display = 'none'; name.textContent = '-'; }
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+        const act = document.activeElement;
+        if (act && ['productName','productPrice','productLink','productImage'].includes(act.id)) { e.preventDefault(); addItem(); }
+        if (act && ['editProductName','editProductPrice','editProductLink','editProductImage'].includes(act.id)) { e.preventDefault(); saveEditItem(); }
+    }
+    if (e.key === 'Escape') { closeEditModal(); closeEditCategoryModal(); }
+});
+
+// ========== INIT ==========
+const styleEl = document.createElement('style');
+styleEl.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}@keyframes toastOut{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(-20px)}}';
+document.head.appendChild(styleEl);
+
+applyDarkMode(); updateDarkModeIcon();
+if (currentTheme !== 'blush') document.body.classList.add('theme-' + currentTheme);
+updateThemeColorMeta();
+
+// Update tombol tema
+document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-theme') === currentTheme) btn.classList.add('active');
+});
+
+applyLanguage();
+
+// Loading progress
+const quotes = [
+    'Dreaming in pastel pink...',
+    'Soft hearts & lace wishes...',
+    'A touch of coquette magic...',
+    'Romanticizing every wish...',
+    'Delicate dreams loading...',
+    'Sweets & ribbons & love...',
+    'Whispers of elegance...',
+    'Blush & bloom moments...'
+];
+
+let currentQuote = 0;
+let loadingProgress = 0;
+
+setInterval(() => {
+    currentQuote = (currentQuote + 1) % quotes.length;
+    const quoteEl = document.getElementById('loadingQuote');
+    if (quoteEl) quoteEl.textContent = quotes[currentQuote];
+}, 1500);
+
+const progressInterval = setInterval(() => {
+    loadingProgress += Math.random() * 12;
+    if (loadingProgress > 100) loadingProgress = 100;
+    
+    const percentEl = document.getElementById('loadingPercent');
+    const fillEl = document.getElementById('progressFill');
+    if (percentEl) percentEl.textContent = Math.floor(loadingProgress);
+    if (fillEl) fillEl.style.width = loadingProgress + '%';
+    
+    const glow = document.querySelector('.progress-glow');
+    if (glow) glow.style.right = (100 - loadingProgress) + '%';
+    
+    const pearlCount = Math.floor(loadingProgress / 10);
+    document.querySelectorAll('.mini-pearl').forEach((p, i) => {
+        if (i < pearlCount) p.classList.add('filled');
+    });
+    
+    if (loadingProgress >= 100) {
+        clearInterval(progressInterval);
+        setTimeout(() => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) loadingScreen.classList.add('hidden');
+        }, 500);
+    }
+}, 180);
+
+renderWishlist(); updateBadge(); switchTab('add');
