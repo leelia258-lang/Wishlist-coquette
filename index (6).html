@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist Coquette 🎀</title>
+    <meta name="theme-color" content="#F8C8DC" id="metaThemeColor">
+    <meta name="background-color" content="#FDE2E7" id="metaBgColor">
+
+    <script>
+        (function() {
+            var themes = {
+                blush: { bg: '#FDE2E7', theme: '#F8C8DC' },
+                lavender: { bg: '#E8DFF5', theme: '#C3AED6' },
+                peach: { bg: '#FDE8D8', theme: '#F8B88B' },
+                matcha: { bg: '#E8F0E3', theme: '#A8C89A' },
+                blue: { bg: '#E0ECF5', theme: '#A8C8E8' },
+                caramel: { bg: '#F5E6D3', theme: '#D4A574' },
+                berry: { bg: '#F5E0EC', theme: '#C48BA8' },
+                pearl: { bg: '#FAF5F0', theme: '#D4C5B0' },
+                ocean: { bg: '#D8F0F0', theme: '#7EC8C8' },
+                charcoal: { bg: '#E8DDD8', theme: '#A08078' }
+            };
+            var darkMode = localStorage.getItem('wishlistDarkMode') === 'true';
+            var currentTheme = localStorage.getItem('wishlistTheme') || 'blush';
+            var colors = darkMode ? { bg: '#2D1F2C', theme: '#4A2F45' } : (themes[currentTheme] || themes.blush);
+            
+            document.getElementById('metaThemeColor').content = colors.theme;
+            document.getElementById('metaBgColor').content = colors.bg;
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon-512.png" type="image/png">
+    <link rel="apple-touch-icon" href="icon-512.png">
+</head>
+<body>
+    
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="bg-particle bg-p1"></div>
+        <div class="bg-particle bg-p2"></div>
+        <div class="bg-particle bg-p3"></div>
+        <div class="bg-particle bg-p4"></div>
+        <div class="bg-particle bg-p5"></div>
+        <div class="bg-particle bg-p6"></div>
+        <div class="bg-particle bg-p7"></div>
+        <div class="bg-particle bg-p8"></div>
+        <div class="bg-line bg-line-1"></div>
+        <div class="bg-line bg-line-2"></div>
+        <div class="bg-line bg-line-3"></div>
+        
+        <div class="corner-ornament corner-tl"></div>
+        <div class="corner-ornament corner-tr"></div>
+        <div class="corner-ornament corner-bl"></div>
+        <div class="corner-ornament corner-br"></div>
+        
+        <div class="loading-wrapper">
+            <div class="loading-frame-top">
+                <div class="frame-line"></div>
+                <div class="frame-bow">
+                    <div class="bow-left"></div>
+                    <div class="bow-right"></div>
+                    <div class="bow-center"></div>
+                </div>
+                <div class="frame-line"></div>
+            </div>
+            
+            <p class="loading-title">Wishlist Coquette</p>
+            
+            <div class="loading-percent-wrapper">
+                <span class="loading-percent" id="loadingPercent">0</span>
+                <span class="loading-percent-sign">%</span>
+            </div>
+            
+            <div class="loading-progress-container">
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                    <div class="progress-glow"></div>
+                </div>
+                <div class="progress-pearls" id="progressPearls">
+                    <span class="mini-pearl"></span>
+                    <span class="mini-pearl"></span>
+                    <span class="mini-pearl"></span>
+                    <span class="mini-pearl"></span>
+                    <span class="mini-pearl"></span>
+                    <span class="mini-pearl"></span>
+                    <span class="mini-pearl"></span>
+                    <span class="mini-pearl"></span>
+                    <span class="mini-pearl"></span>
+                    <span class="mini-pearl"></span>
+                </div>
+            </div>
+            
+            <div class="loading-frame-bottom">
+                <div class="frame-line"></div>
+                <div class="frame-heart">♡</div>
+                <div class="frame-line"></div>
+            </div>
+            
+            <p class="loading-quote" id="loadingQuote">Dreaming in pastel pink...</p>
+        </div>
+    </div>
+
+    <div class="ribbon-container">
+        <div class="ribbon">♡ My Coquette Wishlist ♡</div>
+    </div>
+
+    <div class="container">
+        <header>
+            <p class="subtitle" data-lang="subtitle">Things I want to buy 🛍️</p>
+            <div class="decorative-line">
+                <span>✧</span><span>‧₊˚</span><span>✧</span><span>‧₊˚</span><span>✧</span>
+            </div>
+        </header>
+
+        <!-- THEME PICKER -->
+        <div class="theme-picker">
+            <p class="theme-label"><i class="fa-solid fa-palette"></i> <span data-lang="theme_label">Tema</span></p>
+            
+            <button class="theme-modal-btn" onclick="openThemeModal()">
+                <span class="theme-modal-dot" id="themeModalDot"></span>
+                <span class="theme-modal-name" id="themeModalName">Blush</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            
+            <div class="lang-options">
+                <button class="lang-btn active" data-lang="id" onclick="changeLanguage('id')">ID</button>
+                <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')">EN</button>
+            </div>
+            
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle" title="Dark Mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+
+        <!-- MODAL TEMA -->
+        <div class="theme-modal-overlay" id="themeModalOverlay" onclick="closeThemeModal()"></div>
+        <div class="theme-modal" id="themeModal">
+            <div class="theme-modal-header">
+                <h3 data-lang="theme_modal_title">Pilih Tema</h3>
+                <button class="theme-modal-close" onclick="closeThemeModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="theme-modal-grid" id="themeModalGrid"></div>
+        </div>
+
+        <nav class="tab-navigation">
+            <button class="tab-btn active" onclick="switchTab('add')" id="tabAddBtn">
+                <i class="fa-solid fa-plus"></i> <span data-lang="tab_add">Tambah</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('list')" id="tabListBtn">
+                <i class="fa-solid fa-heart"></i> <span data-lang="tab_wishlist">Wishlist</span>
+                <span class="badge" id="badgeCount">0</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('categories')" id="tabCategoriesBtn">
+                <i class="fa-solid fa-tags"></i> <span data-lang="tab_categories">Kategori</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('trash')" id="tabTrashBtn">
+                <i class="fa-solid fa-trash-can"></i> <span data-lang="tab_trash">Sampah</span>
+                <span class="badge" id="trashCount">0</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('stats')" id="tabStatsBtn">
+                <i class="fa-solid fa-chart-simple"></i> <span data-lang="tab_stats">Statistik</span>
+            </button>
+        </nav>
+
+        <!-- TAB TAMBAH -->
+        <div class="tab-content active" id="tabAdd">
+            <div class="form-card">
+                <div class="form-decoration">🎀</div>
+                <h3><i class="fa-solid fa-pen-to-square"></i> <span data-lang="form_title_add">Tambah Wishlist Baru</span></h3>
+                
+                <div class="input-group">
+                    <label><i class="fa-solid fa-tag"></i> <span data-lang="label_name">Nama Produk</span></label>
+                    <input type="text" id="productName" placeholder="Contoh: Dress vintage putih...">
+                </div>
+                
+                <div class="input-group">
+                    <label><i class="fa-solid fa-folder"></i> <span data-lang="label_category">Kategori</span></label>
+                    <select id="productCategory" class="category-select">
+                        <option value="" data-lang="option_no_category">Tanpa Kategori</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label><i class="fa-solid fa-link"></i> <span data-lang="label_link">Link Produk</span></label>
+                    <input type="url" id="productLink" placeholder="Masukkan link produk..." oninput="detectStorePreview()">
+                </div>
+                
+                <div class="input-group">
+                    <label><i class="fa-solid fa-image"></i> <span data-lang="label_image">Gambar Produk (URL)</span></label>
+                    <input type="url" id="productImage" placeholder="https://..." oninput="previewImage()">
+                </div>
+                
+                <div class="image-preview-container" id="imagePreviewContainer" style="display: none;">
+                    <div class="image-preview">
+                        <img src="" alt="Preview" id="imagePreview">
+                        <button class="btn-remove-preview" onclick="clearImagePreview()">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-coins"></i> <span data-lang="label_price">Harga (Rp)</span></label>
+                        <input type="text" id="productPrice" placeholder="150000">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-shop"></i> <span data-lang="label_store_detected">Toko Terdeteksi</span></label>
+                        <div class="store-detected" id="storeDetected">
+                            <span class="store-badge" id="storeBadgePreview" style="display: none;"></span>
+                            <span class="store-name" id="storeNamePreview">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label><i class="fa-solid fa-note-sticky"></i> <span data-lang="label_note">Catatan Personal</span></label>
+                    <input type="text" id="productNote" placeholder="Contoh: Buat kado ultah mama...">
+                </div>
+                
+                <div class="input-group">
+                    <label><i class="fa-solid fa-calendar"></i> <span data-lang="label_target_date">Tanggal Target</span></label>
+                    <div class="date-time-selects">
+                        <div class="custom-select mini-select" id="productDayWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('productDay')">
+                                <span class="custom-select-label" id="productDayLabel">Hari</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="productDayOptions"></div>
+                        </div>
+                        <div class="custom-select mini-select" id="productMonthWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('productMonth')">
+                                <span class="custom-select-label" id="productMonthLabel">Bulan</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="productMonthOptions"></div>
+                        </div>
+                        <div class="custom-select mini-select" id="productYearWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('productYear')">
+                                <span class="custom-select-label" id="productYearLabel">Tahun</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="productYearOptions"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label><i class="fa-solid fa-clock"></i> <span data-lang="label_target_time">Jam Target</span></label>
+                    <div class="date-time-selects">
+                        <div class="custom-select mini-select" id="productHourWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('productHour')">
+                                <span class="custom-select-label" id="productHourLabel">Jam</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="productHourOptions"></div>
+                        </div>
+                        <span class="time-separator">:</span>
+                        <div class="custom-select mini-select" id="productMinuteWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('productMinute')">
+                                <span class="custom-select-label" id="productMinuteLabel">Menit</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="productMinuteOptions"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-clear-datetime" onclick="clearDateTime('product')">
+                    <i class="fa-solid fa-xmark"></i> <span data-lang="btn_clear_datetime">Bersihkan Tanggal & Jam</span>
+                </button>
+                
+                <button class="btn-add" onclick="addItem()">
+                    <i class="fa-solid fa-heart-circle-plus"></i> <span data-lang="btn_add">Tambah ke Wishlist</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB WISHLIST -->
+        <div class="tab-content" id="tabList">
+            
+            <div class="wishlist-header">
+                <p><span data-lang="wishlist_count_1">Kamu punya</span> <strong id="totalItems">0</strong> <span data-lang="wishlist_count_2">item di wishlist</span></p>
+            </div>
+
+            <button class="btn-vision-mode" onclick="toggleVisionBoard()">
+                <i class="fa-solid fa-image"></i> <span data-lang="btn_vision">Vision Board</span>
+            </button>
+
+            <div class="total-price-card" id="totalPriceCard" style="display: none;">
+                <div class="total-price-left">
+                    <i class="fa-solid fa-coins"></i>
+                    <span data-lang="total_label">Total Wishlist</span>
+                </div>
+                <div class="total-price-right">
+                    <span class="total-price-amount" id="totalPriceAmount">Rp 0</span>
+                </div>
+            </div>
+
+            <div class="store-totals" id="storeTotals" style="display: none;"></div>
+
+            <div class="search-row">
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cari produk..." oninput="filterWishlist()">
+                    <button class="btn-clear-search" id="btnClearSearch" onclick="clearSearch()" style="display: none;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <div class="custom-select" id="categorySelectWrapper">
+                    <button class="custom-select-btn" onclick="toggleCustomSelect('category')">
+                        <span class="custom-select-label" id="categorySelectLabel">Semua Kategori</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="custom-select-options" id="categorySelectOptions"></div>
+                </div>
+                
+                <div class="custom-select" id="storeSelectWrapper">
+                    <button class="custom-select-btn" onclick="toggleCustomSelect('store')">
+                        <span class="custom-select-label" id="storeSelectLabel">Semua Toko</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="custom-select-options" id="storeSelectOptions"></div>
+                </div>
+            </div>
+
+            <div class="sort-row">
+                <label class="sort-label"><i class="fa-solid fa-arrow-down-wide-short"></i> <span data-lang="sort_label">Urutkan:</span></label>
+                <div class="custom-select" id="sortSelectWrapper">
+                    <button class="custom-select-btn" onclick="toggleCustomSelect('sort')">
+                        <span class="custom-select-label" id="sortSelectLabel">Terbaru</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="custom-select-options" id="sortSelectOptions"></div>
+                </div>
+            </div>
+            
+            <p class="search-result-text" id="searchResultText" style="display: none;"></p>
+            
+            <div class="wishlist-container" id="wishlistContainer"></div>
+            
+            <div class="vision-board" id="visionBoard" style="display: none;"></div>
+
+            <div class="empty-state" id="noResultState" style="display: none;">
+                <div class="empty-icon">🔍</div>
+                <h3 data-lang="no_result_title">Produk tidak ditemukan</h3>
+                <p data-lang="no_result_text">Coba kata kunci lain!</p>
+                <button class="btn-add btn-small" onclick="clearSearch();">
+                    <i class="fa-solid fa-rotate-left"></i> <span data-lang="btn_show_all">Tampilkan Semua</span>
+                </button>
+            </div>
+
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">🎀</div>
+                <h3 data-lang="empty_title">Wishlist kamu masih kosong</h3>
+                <p data-lang="empty_text">Yuk, tambahkan produk impianmu dulu!</p>
+                <button class="btn-add btn-small" onclick="switchTab('add')">
+                    <i class="fa-solid fa-plus"></i> <span data-lang="btn_add_first">Tambah Sekarang</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB KATEGORI -->
+        <div class="tab-content" id="tabCategories">
+            
+            <div class="form-card">
+                <h3><i class="fa-solid fa-plus-circle"></i> <span data-lang="cat_form_title">Tambah Kategori Baru</span></h3>
+                <div class="input-group">
+                    <input type="text" id="newCategoryName" placeholder="Nama kategori...">
+                </div>
+                <button class="btn-add" onclick="addCategory()">
+                    <i class="fa-solid fa-plus"></i> <span data-lang="btn_add_category">Tambah Kategori</span>
+                </button>
+            </div>
+            
+            <div class="category-list-header">
+                <p><i class="fa-solid fa-list"></i> <span data-lang="cat_list_title">Daftar Kategori</span></p>
+            </div>
+            
+            <div class="category-list" id="categoryList"></div>
+            
+            <div class="empty-state" id="emptyCategoryState">
+                <div class="empty-icon">🏷️</div>
+                <h3 data-lang="cat_empty_title">Belum ada kategori</h3>
+                <p data-lang="cat_empty_text">Buat kategori pertamamu di atas!</p>
+            </div>
+        </div>
+
+        <!-- TAB SAMPAH -->
+        <div class="tab-content" id="tabTrash">
+            
+            <div class="wishlist-header">
+                <p><span data-lang="trash_count_1">Kamu punya</span> <strong id="trashTotalItems">0</strong> <span data-lang="trash_count_2">produk di sampah</span></p>
+            </div>
+            
+            <button class="btn-clear-trash" onclick="clearAllTrash()">
+                <i class="fa-solid fa-broom"></i> <span data-lang="btn_clear_trash">Kosongkan Sampah</span>
+            </button>
+            
+            <div class="trash-list" id="trashList"></div>
+            
+            <div class="empty-state" id="emptyTrashState">
+                <div class="empty-icon">🗑️</div>
+                <h3 data-lang="trash_empty_title">Sampah kosong</h3>
+                <p data-lang="trash_empty_text">Produk yang dihapus akan muncul di sini</p>
+            </div>
+        </div>
+
+        <!-- TAB STATISTIK -->
+        <div class="tab-content" id="tabStats">
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
+                    <div class="stat-value" id="statTotalItems">0</div>
+                    <div class="stat-label" data-lang="stat_total_items">Total Produk</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-coins"></i></div>
+                    <div class="stat-value" id="statTotalPrice">Rp 0</div>
+                    <div class="stat-label" data-lang="stat_total_price">Total Harga</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-value" id="statPurchased">0</div>
+                    <div class="stat-label" data-lang="stat_purchased">Sudah Dibeli</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-circle"></i></div>
+                    <div class="stat-value" id="statNotPurchased">0</div>
+                    <div class="stat-label" data-lang="stat_not_purchased">Belum Dibeli</div>
+                </div>
+            </div>
+            
+            <div class="stats-detail-card">
+                <h4><i class="fa-solid fa-folder"></i> <span data-lang="stat_top_category">Kategori Terbanyak</span></h4>
+                <p id="statTopCategory">-</p>
+            </div>
+            
+            <div class="stats-detail-card">
+                <h4><i class="fa-solid fa-store"></i> <span data-lang="stat_top_store">Toko Terbanyak</span></h4>
+                <p id="statTopStore">-</p>
+            </div>
+            
+            <div class="stats-detail-card">
+                <h4><i class="fa-solid fa-arrow-up"></i> <span data-lang="stat_most_expensive">Termahal</span></h4>
+                <p id="statMostExpensive">-</p>
+            </div>
+            
+            <div class="stats-detail-card">
+                <h4><i class="fa-solid fa-arrow-down"></i> <span data-lang="stat_cheapest">Termurah</span></h4>
+                <p id="statCheapest">-</p>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- MODAL EDIT ITEM -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-pen-to-square"></i> <span data-lang="modal_edit_title">Edit Wishlist</span></h3>
+                <button class="btn-close-modal" onclick="closeEditModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label data-lang="label_name">Nama Produk</label>
+                    <input type="text" id="editProductName">
+                </div>
+                <div class="input-group">
+                    <label data-lang="label_category">Kategori</label>
+                    <select id="editProductCategory" class="category-select"></select>
+                </div>
+                <div class="input-group">
+                    <label data-lang="label_link">Link Produk</label>
+                    <input type="url" id="editProductLink" placeholder="Masukkan link produk..." oninput="detectEditStorePreview()">
+                </div>
+                <div class="input-group">
+                    <label data-lang="label_image">Gambar (URL)</label>
+                    <input type="url" id="editProductImage" oninput="previewEditImage()">
+                </div>
+                <div class="image-preview-container" id="editImagePreviewContainer" style="display: none;">
+                    <div class="image-preview">
+                        <img src="" id="editImagePreview">
+                        <button class="btn-remove-preview" onclick="clearEditImagePreview()">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label data-lang="label_price">Harga (Rp)</label>
+                        <input type="text" id="editProductPrice">
+                    </div>
+                    <div class="input-group">
+                        <label data-lang="label_store_detected">Toko Terdeteksi</label>
+                        <div class="store-detected" id="editStoreDetected">
+                            <span class="store-badge" id="editStoreBadgePreview" style="display: none;"></span>
+                            <span class="store-name" id="editStoreNamePreview">-</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label data-lang="label_note">Catatan Personal</label>
+                    <input type="text" id="editProductNote" placeholder="Contoh: Buat kado ultah mama...">
+                </div>
+                <div class="input-group">
+                    <label data-lang="label_target_date">Tanggal Target</label>
+                    <div class="date-time-selects">
+                        <div class="custom-select mini-select" id="editProductDayWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('editProductDay')">
+                                <span class="custom-select-label" id="editProductDayLabel">Hari</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="editProductDayOptions"></div>
+                        </div>
+                        <div class="custom-select mini-select" id="editProductMonthWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('editProductMonth')">
+                                <span class="custom-select-label" id="editProductMonthLabel">Bulan</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="editProductMonthOptions"></div>
+                        </div>
+                        <div class="custom-select mini-select" id="editProductYearWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('editProductYear')">
+                                <span class="custom-select-label" id="editProductYearLabel">Tahun</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="editProductYearOptions"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label data-lang="label_target_time">Jam Target</label>
+                    <div class="date-time-selects">
+                        <div class="custom-select mini-select" id="editProductHourWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('editProductHour')">
+                                <span class="custom-select-label" id="editProductHourLabel">Jam</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="editProductHourOptions"></div>
+                        </div>
+                        <span class="time-separator">:</span>
+                        <div class="custom-select mini-select" id="editProductMinuteWrapper">
+                            <button class="custom-select-btn" onclick="toggleCustomSelect('editProductMinute')">
+                                <span class="custom-select-label" id="editProductMinuteLabel">Menit</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <div class="custom-select-options" id="editProductMinuteOptions"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-clear-datetime" onclick="clearDateTime('editProduct')">
+                    <i class="fa-solid fa-xmark"></i> <span data-lang="btn_clear_datetime">Bersihkan Tanggal & Jam</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeEditModal()"><span data-lang="btn_cancel">Batal</span></button>
+                <button class="btn-save" onclick="saveEditItem()"><span data-lang="btn_save">Simpan</span></button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL EDIT KATEGORI -->
+    <div class="modal-overlay" id="editCategoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-pen-to-square"></i> <span data-lang="modal_edit_cat_title">Edit Kategori</span></h3>
+                <button class="btn-close-modal" onclick="closeEditCategoryModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label data-lang="cat_name_label">Nama Kategori</label>
+                    <input type="text" id="editCategoryName">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeEditCategoryModal()"><span data-lang="btn_cancel">Batal</span></button>
+                <button class="btn-save" onclick="saveEditCategory()"><span data-lang="btn_save">Simpan</span></button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL KONFIRMASI HAPUS -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-content confirm-modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-triangle-exclamation"></i> <span data-lang="confirm_title">Hapus Produk?</span></h3>
+                <button class="btn-close-modal" onclick="closeConfirmModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body confirm-body">
+                <p data-lang="confirm_text">Yakin ingin menghapus produk ini?</p>
+                <p class="confirm-product-name" id="confirmProductName"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeConfirmModal()"><span data-lang="btn_cancel">Batal</span></button>
+                <button class="btn-save btn-delete-confirm" onclick="confirmDelete()"><i class="fa-solid fa-trash-can"></i> <span data-lang="btn_delete">Hapus</span></button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-backdrop" id="modalBackdrop" onclick="closeEditModal(); closeEditCategoryModal(); closeConfirmModal();"></div>
+
+    <div class="footer-decoration">
+        <span>✿</span><span>❀</span><span>✿</span><span>❀</span><span>✿</span>
+        <p>Made with love ♡</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
